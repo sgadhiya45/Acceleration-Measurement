@@ -52,9 +52,6 @@ The experiment successfully measured the floor heights with a mean value of 3.17
 ## Conclusion
 The project effectively demonstrates how an accelerometer, combined with microcontroller processing and MATLAB analysis, can be used to measure elevator floor heights with precision. The system was tested in real-world conditions, showing consistent results across multiple elevator trips.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## References
 - [1] Small, Low Power, 3-Axis ±3 g Accelerometer ADXL335. Analog Devices.
 - [2] Bochert, A., Winter Semester 2021/2022. Hochschule Bremerhaven.
