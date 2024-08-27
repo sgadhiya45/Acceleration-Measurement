@@ -16,18 +16,15 @@ A project for measuring and analyzing elevator acceleration to calculate floor h
 
 ## Project Structure
 - **`src/`**: Contains the C source code for the ATmega32 microcontroller, responsible for data acquisition and logging.
-  - `main.c`: Main program for the microcontroller.
-  - `sensor_config.c`: Configuration and initialization of the ADXL355 sensor.
 - **`hardware/`**: Contains circuit diagrams and PCB layouts.
   - `circuit_diagram.pdf`: Detailed circuit diagram used in the project.
   - `PCB_layout.pdf`: Layout of the printed circuit board.
 - **`data/`**: Contains raw and processed data collected from the elevator.
-  - `raw_data.csv`: Unprocessed data from the accelerometer.
-  - `processed_data.csv`: Calibrated and corrected data used in analysis.
+  - `log00223.txt`: Unprocessed data from the accelerometer.
+- **`Simulation/`**: Conation simulation circuit
+  -`Simulation_test-circuit_LT-Spice.pdf`: Simulation test circuit in LT-SPICE 
 - **`analysis/`**: MATLAB scripts and results from data analysis.
   - `analysis.m`: MATLAB script for analyzing the acceleration data and calculating floor height.
-  - `velocity_plot.png`: Plot of velocity over time.
-  - `displacement_plot.png`: Plot of displacement over time, showing floor height.
 - **`report/`**: Contains the final project report.
   - `Acceleration_Measurement.pdf`: Detailed project report documenting the experiment, methodology, and results.
 
