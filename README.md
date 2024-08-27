@@ -21,8 +21,8 @@ A project for measuring and analyzing elevator acceleration to calculate floor h
   - `PCB_layout.pdf`: Layout of the printed circuit board.
 - **`data/`**: Contains raw and processed data collected from the elevator.
   - `log00223.txt`: Unprocessed data from the accelerometer.
-- **`Simulation/`**: Conation simulation circuit
-  -`Simulation_test-circuit_LT-Spice.pdf`: Simulation test circuit in LT-SPICE 
+- **`Simulation/`**: Contains simulation circuit.
+  - `Simulation_test-circuit_LT-Spice.pdf`: Simulation test circuit in LT-SPICE. 
 - **`analysis/`**: MATLAB scripts and results from data analysis.
   - `analysis.m`: MATLAB script for analyzing the acceleration data and calculating floor height.
 - **`report/`**: Contains the final project report.
