@@ -1,104 +1,126 @@
-x = load('LOG00267.txt');
-calib_1 = 2793;
-calib_2 = 8641;
-s_trip = x(180:806);
-k0 = 9.81/(calib_2 - calib_1);
-k1 = -calib_1 * k0;
-acc = k0 * x(265:415,1) + k1;
-ds_trip = k0 * x(180:806) + k1;
-ds_trip_g = ds_trip - 9.81;
-acc = acc - 9.81 ;
-dtvel = acc * 0.1;
-vel = cumsum(dtvel);
+% Created: Aug. 2022, Sumit Gadhiya
 
-%%%er = transpose (linspace (0,-0.1,150)) ;
-%vel_corrected = vel(1:150,1) - er;
-%dtdist = vel_corrected*0.1;
-%dist = cumsum(dtdist);
-%time1 = linspace(0,150*.1,150);
-% Check the size of vel to understand its dimensions
-disp(size(vel));
+% Load the acceleration data from the text file
+data = load('LOG00223.txt');
 
-% Ensure vel has enough elements before accessing vel(1:150,1)
-if numel(vel) >= 150
-    er = transpose(linspace(0, -0.1, 150));
+% Calibration values for the sensor
+calib_1 = 2793;  % Lower calibration bound
+calib_2 = 8641;  % Upper calibration bound
+
+% Extract a specific trip segment from the data (from index 180 to 806)
+trip_segment = data(180:806);
+
+% Calculate the scale factor (k0) and offset (k1) for converting raw data to acceleration
+k0 = 9.81 / (calib_2 - calib_1);  % Scale factor to convert to m/s^2
+k1 = -calib_1 * k0;  % Offset for zero calibration
+
+% Calculate acceleration during a specific time segment
+acceleration = k0 * data(265:415, 1) + k1;
+
+% Apply the same calibration to the entire trip segment
+calibrated_trip = k0 * data(180:806) + k1;
+
+% Adjust the calibrated data to remove the 1g (gravity) offset
+calibrated_trip_g = calibrated_trip - 9.81;
+
+% Remove gravity from the calculated acceleration
+acceleration = acceleration - 9.81;
+
+% Integrate acceleration to calculate velocity (assuming a sample time of 0.1s)
+dt_vel = acceleration * 0.1;
+velocity = cumsum(dt_vel);  % Cumulative sum to integrate
+
+% Check the size of the velocity vector
+disp(size(velocity));
+
+% Ensure there are enough data points before proceeding with drift correction
+if numel(velocity) >= 150
+    % Create a linear error vector to correct drift in the first 150 data points
+    drift_error = transpose(linspace(0, -0.1, 150));
     
-    % Correct vel_corrected calculation to match dimensions
-    vel_corrected = vel(1:150) - er;
+    % Apply drift correction to the velocity
+    velocity_corrected = velocity(1:150) - drift_error;
     
-    dtdist = vel_corrected * 0.1;
-    dist = cumsum(dtdist);
-    time1 = linspace(0, 150 * 0.1, 150);
+    % Integrate corrected velocity to calculate distance
+    dt_distance = velocity_corrected * 0.1;
+    distance = cumsum(dt_distance);
+    
+    % Create a time vector for plotting (assuming 0.1s sample time)
+    time_vector = linspace(0, 150 * 0.1, 150);
 
-    % Plotting code
+    % Plot raw acceleration data for all trips
     figure(1);
-    plot(x);
+    plot(data);
     title('Acceleration Raw Data for All Trips');
-    xlabel('Time(s)');
-    ylabel('Raw data from acceleration Sensor');
-    grid;
+    xlabel('Time (s)');
+    ylabel('Raw Data from Acceleration Sensor');
+    grid on;
 
-    % Other figure plotting codes go here...
+    % Plot calibrated acceleration data during upward travel
     figure(2);
-plot(acc);
-title('Acceleration Data while travelling upwards');
-xlabel('Time(s)');
-ylabel('Acceleration(m/s^2)');
-grid;
+    plot(acceleration);
+    title('Acceleration Data During Upward Travel');
+    xlabel('Time (s)');
+    ylabel('Acceleration (m/s^2)');
+    grid on;
 
-figure(3);
-plot(vel);
-hold on;
-plot(vel_corrected);
-line([0 151], [0 -0.105], 'Color', 'green');
-hold off;
-title('Velocity with drift, drift error, and corrected velocity graph for a single trip');
-xlabel('Time(s)');
-ylabel('Velocity(m/s)');
+    % Plot velocity and corrected velocity with drift error
+    figure(3);
+    plot(velocity);
+    hold on;
+    plot(velocity_corrected);
+    line([0, 151], [0, -0.105], 'Color', 'green');
+    hold off;
+    title('Velocity with Drift, Drift Error, and Corrected Velocity for a Single Trip');
+    xlabel('Time (s)');
+    ylabel('Velocity (m/s)');
+    grid on;
 
-grid;
+    % Plot calculated distance based on corrected velocity
+    figure(4);
+    plot(distance);
+    title('Distance Measured by Acceleration Sensor (Height of the Floor)');
+    xlabel('Time (s)');
+    ylabel('Distance (m)');
+    grid on;
 
-figure(4);
-plot(dist);
-title('Distance data measured by the acceleration sensor (Height of the floor) ');
-xlabel('Time(s)');
-ylabel('Distance(m)');
-grid;
+    % Comparison plot: Acceleration, Corrected Velocity, and Distance
+    figure(5);
+    plot(acceleration);
+    hold on;
+    plot(velocity_corrected);
+    plot(distance);
+    hold off;
+    title('Comparison of Acceleration, Velocity, and Distance');
+    xlabel('Time (s)');
+    ylabel('Acceleration (m/s^2), Velocity (m/s), Distance (m)');
+    grid on;
 
-figure(5);
-plot(acc);
-hold on;
-plot(vel_corrected);
-hold on;
-plot(dist);
-hold off;
-title('Comparision of Acceleration, Velociry and Distance');
-xlabel('Time(s)');
-ylabel('Acceleration(m/s^2), Velocity(m/s), Distance(m)');
-grid;
+    % Plot raw acceleration data for the specific trip segment
+    figure(6);
+    plot(trip_segment);
+    title('Acceleration Raw Data for Specific Trip Segment');
+    xlabel('Time (s)');
+    ylabel('Acceleration (m/s^2)');
+    grid on;
 
-figure(6);
-plot(s_trip);
-title('Acceleration Raw Data for All Trips');
-xlabel('Time(s)');
-ylabel('Acceleration(m/s^2)');
-grid;
+    % Plot calibrated acceleration data for the specific trip
+    figure(7);
+    plot(calibrated_trip);
+    title('Calibrated Acceleration Data for Specific Trip');
+    xlabel('Time (s)');
+    ylabel('Acceleration (m/s^2)');
+    grid on;
 
-figure(7);
-plot(ds_trip);
-title('Acceleration Caliberated Data for a single trip');
-xlabel('Time(s)');
-ylabel('Acceleration(m/s^2)');
-grid;
+    % Plot calibrated acceleration data with 1g offset removed
+    figure(8);
+    plot(calibrated_trip_g);
+    title('Calibrated Acceleration Data with 1g Offset Removed for Specific Trip');
+    xlabel('Time (s)');
+    ylabel('Acceleration (m/s^2)');
+    grid on;
 
-figure(8);
-plot(ds_trip_g);
-title('Acceleration Caliberated Data with 1g offset removed for a single trip');
-xlabel('Time(s)');
-ylabel('Acceleration(m/s^2)');
 else
-    disp("Error: vel does not have enough elements for vel(1:150)!");
+    % Display an error message if the velocity data is insufficient
+    disp("Error: 'velocity' does not have enough elements for vel(1:150)!");
 end
-
-
-
